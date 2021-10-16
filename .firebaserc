@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "gfire-dc138": {
+      "hosting": {
+        "gfire": [
+          "gfire-dc138"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "gfire-dc138"
+  }
+}
