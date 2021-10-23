@@ -1,4 +1,115 @@
-<div class="items-container">
-  <gf-items></gf-items>
+
+<div class="display-container">
+  
+  
+  <div class="add-equity">
+    <div class="submit-form">
+      <div *ngIf="!submitted">
+        <div class="form-group">
+          <label for="symbol">Symbol</label>
+          <input
+            type="text"
+            class="form-control"
+            id="symbol"
+            required
+            [(ngModel)]="equity.symbol"
+            name="symbol"
+          />
+        </div>
+    
+        <button (click)="saveEquity()" class="btn btn-success">Submit</button>
+      </div>
+    
+      <div *ngIf="submitted">
+        <h4>You submitted successfully!</h4>
+        <button class="btn btn-success" (click)="newEquity()">Add</button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="show-equities">
+
+    <div class="list row">
+      <div class="col-md-6">
+        <h4>Equities List</h4>
+        <ul class="list-group">
+          <li
+            class="list-group-item"
+            *ngFor="let equity of equities; let i = index"
+            [class.active]="i == currentIndex"
+            (click)="setActiveEquity(equity, i)">
+            {{ equity.symbol }}
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <div *ngIf="currentEquity" class="equity-details">
+
+          <div *ngIf="currentEquity" class="edit-form">
+            <h4>Equity</h4>
+            <form>
+              <div class="form-group">
+                <label for="symbol">Symbol</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="symbol"
+                  [(ngModel)]="currentEquity.symbol"
+                  name="symbol"/>
+              </div>
+              
+              <div class="form-group">
+                <label><strong>Status:</strong></label>
+                {{ currentEquity.published ? "Published" : "Pending" }}
+              </div>
+            </form>
+          
+            <button
+              class="badge badge-primary mr-2"
+              *ngIf="currentEquity.published"
+              (click)="updatePublished(false)">
+              UnPublish
+            </button>
+            <button
+              *ngIf="!currentEquity.published"
+              class="badge badge-primary mr-2"
+              (click)="updatePublished(true)">
+              Publish
+            </button>
+          
+            <button class="badge badge-danger mr-2" (click)="deleteEquity()">
+              Delete
+            </button>
+          
+            <button type="submit" class="badge badge-success" (click)="updateEquity()">
+              Update
+            </button>
+            <p>{{ message }}</p>
+          </div>
+          
+          <div *ngIf="!currentEquity">
+            <br />
+            <p>Cannot access this Equity...</p>
+          </div>
+
+
+
+
+          
+        </div>
+    
+        <div *ngIf="!currentEquity">
+          <br />
+          <p>Please click on an Equity...</p>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
 </div>
+
 
