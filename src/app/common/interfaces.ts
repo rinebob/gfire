@@ -10,10 +10,9 @@
 export class Equity {
     id?: string;
     symbol?: string;
+    name?: string;
     exchange?: string;
     options?: Option[];
-    published?: boolean;
-
 }
 
 export interface Option {

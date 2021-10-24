@@ -34,3 +34,33 @@
     <br />
     <p>No current equity dude... (wtf??)</p>
 </div>
+
+<h4>Generate symbols</h4>
+
+<form class="form-group" [formGroup]="symbolGeneratorForm">
+    
+    <label for="startIndexControl">Start index</label>
+    <input type="number"
+           class="form-control"
+           id="startIndexControl"
+           required
+           [formControl]="startIndexControl"
+           name="startIndex"/>
+
+    <label for="endIndexControl">End index</label>
+    <input type="number"
+            class="form-control"
+            id="endIndexControl"
+            required
+            [formControl]="endIndexControl"
+            name="endIndex"/>
+    
+    <div class="button-container">
+
+        <button class="btn btn-primary mr-2" (click)="generateSymbols()">
+            Generate symbols
+        </button>
+        
+    </div>
+
+</form>
