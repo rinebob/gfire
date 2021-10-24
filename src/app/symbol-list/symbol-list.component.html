@@ -1,10 +1,13 @@
 
 <h4>Equities List</h4>
-<div *ngIf="equities$ | async as equities">
-    <div *ngFor="let equity of equities; let i = index"
-        class="list-item"
-        [class.active]="i == currentIndex"
-        (click)="setActiveEquity(equity)">
-        {{ equity.symbol }}
+<ng-container *ngIf="equities$ | async as equities">
+    <div class="list-container">
+
+        <div *ngFor="let equity of equities"
+             class="list-item"
+             (click)="setActiveEquity(equity)">
+            {{ equity.symbol }}
+        </div>
     </div>
-</div>
+
+</ng-container>

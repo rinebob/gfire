@@ -12,8 +12,6 @@ import { INITIAL_EQUITY } from '../common/constants';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SymbolDetailComponent implements OnChanges, OnInit {
-  // @Input() equity: Equity = INITIAL_EQUITY;
-
   @Input()
   set equity(value: Equity) {
     this.currentEquityBS.next(value);
@@ -25,7 +23,7 @@ export class SymbolDetailComponent implements OnChanges, OnInit {
 
 
   @Output() refreshList: EventEmitter<boolean> = new EventEmitter();
-  @Output() updatePublished: EventEmitter<boolean> = new EventEmitter()
+  @Output() addEquity: EventEmitter<Equity> = new EventEmitter();
   @Output() equityToUpdate: EventEmitter<Equity> = new EventEmitter()
   @Output() equityToDelete: EventEmitter<string> = new EventEmitter()
 
@@ -50,16 +48,20 @@ export class SymbolDetailComponent implements OnChanges, OnInit {
   ngOnInit(): void {
   }
 
-  updatePublishedStatus(status: boolean): void {
-    this.updatePublished.emit(status);
-    // if (this.currentEquity?.id) {
-    //   this.equitiesService.updateEquity(this.currentEquity.id, { published: status })
-    //   .then(() => {
-    //     this.currentEquity.published = status;
-    //     this.message = 'The status was updated successfully!';
-    //   })
-    //   .catch(err => console.log(err));
-    // }
+  saveEquity(): void {
+    const value = this.symbolControl.value;
+    console.log('sD sE symbol control value: ', value)
+    const equity = INITIAL_EQUITY;
+    equity.symbol = this.symbolControl.value;
+    
+    console.log('sD sE equity to add: ', equity)
+
+    this.addEquity.emit(equity);
+
+    this.resetEquity();
+  
+    
+  
   }
 
   updateEquity(): void {
@@ -69,7 +71,7 @@ export class SymbolDetailComponent implements OnChanges, OnInit {
     };
     console.log('sD uE update equity data: ', data);
     this.equityToUpdate.emit(data);
-    this.symbolControl.setValue('');
+    this.resetEquity();
 
    
   }
@@ -77,6 +79,12 @@ export class SymbolDetailComponent implements OnChanges, OnInit {
   deleteEquity(): void {
     console.log('sD dE equity to delete: ', this.currentEquityBS.value.id);
     this.equityToDelete.emit(this.currentEquityBS.value.id);
+    this.resetEquity();
+  }
+
+  resetEquity(): void {
+    // this.submitted = false;
+    this.equity = new Equity();
     this.symbolControl.setValue('');
   }
 

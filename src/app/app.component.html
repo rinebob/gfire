@@ -1,27 +1,19 @@
 
 <div class="display-container" *ngIf="equities$ | async as equities">
-
-  <gf-symbol-form class="add-equity" (addEquity)="saveEquity($event)">
-  </gf-symbol-form>
   
-  <div class="second-container">
-
+  
     <gf-symbol-list class="show-equities"
                     [equities]="equities"
                     (currentEquity)="setCurrentEquity($event)">
     </gf-symbol-list>
 
+    
     <gf-symbol-detail class="equity-detail"
                       [equity]="(currentEquity$ | async) || {}"
                       (refreshList)="refreshList()"
-                      (updatePublished)="updatePublished($event)"
+                      (addEquity)="saveEquity($event)"
                       (equityToUpdate)="updateEquity($event)"
                       (equityToDelete)="deleteEquity($event)">
     </gf-symbol-detail>
-
-    <!-- <gf-symbol-detail class="equity-detail">
-    </gf-symbol-detail> -->
-
-  </div>
 
 </div>
