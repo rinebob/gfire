@@ -1,9 +1,11 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { FirebaseService } from './firebase.service';
 import { Equity, Item, Option } from './common/interfaces';
+import { INITIAL_EQUITY } from './common/constants';
+
 
 
 
@@ -14,90 +16,92 @@ import { Equity, Item, Option } from './common/interfaces';
 })
 export class AppComponent implements OnChanges, OnInit {
 
-  equity: Equity = new Equity();
-  submitted = false;
-  equities?: Equity[];
-  currentEquity: Equity = {
-    symbol: '',
-    published: false,
-  };
+  // equity: Equity = INITIAL_EQUITY;
+  // equities?: Equity[];
   currentIndex = -1;
-  symbol = '';
-  
+  // symbol = '';
   message = '';
+
+  equitiesBS = new BehaviorSubject<Equity[]>([]);
+  equities$: Observable<Equity[]> = this.equitiesBS;
+
+  currentEquityBS = new BehaviorSubject<Equity>(INITIAL_EQUITY);
+  currentEquity$: Observable<Equity> = this.currentEquityBS;
   
   constructor(private readonly equitiesService: FirebaseService) {
+
     
   }
 
   ngOnInit() {
     this.message = '';
     this.getEquities();
+    
   }
 
   ngOnChanges(): void {
     this.message = '';
-    this.currentEquity = { ...this.equity };
+    this.currentEquityBS.next(INITIAL_EQUITY);
   }
 
-  saveEquity(): void {
-    this.equitiesService.createEquity(this.equity).then(() => {
+  saveEquity(equity: Equity): void {
+    this.equitiesService.createEquity(equity).then(() => {
       console.log('a sE equity saved dude!');
-      this.submitted = true;
+      // this.submitted = true;
     });
+    this.setCurrentEquity(equity);
   
   }
 
-  newEquity(): void {
-    this.submitted = false;
-    this.equity = new Equity();
-  }
+  // newEquity(): void {
+  //   this.submitted = false;
+  //   this.equity = new Equity();
+  // }
 
   getEquities() {
     this.equitiesService.getAllEquities().snapshotChanges()
     .pipe(
       map(changes => changes.map(change => ({id: change.payload.doc.id, ...change.payload.doc.data()})))
     )
-    .subscribe( data => {this.equities = data;});
+    .subscribe( data => { this.equitiesBS.next(data) });
   }
 
-  setActiveEquity(equity: Equity, index: number): void {
-    this.currentEquity = equity;
-    this.currentIndex = index;
+  setCurrentEquity(equity: Equity): void {
+    console.log('a sCE equity: ', equity.symbol);
+    this.currentEquityBS.next(equity);
+    // this.currentIndex = index;
   }
 
   refreshList(): void {
-    this.currentEquity = {};
-    this.currentIndex = -1;
     this.getEquities();
   }
 
   updatePublished(status: boolean): void {
-    if (this.currentEquity?.id) {
-      this.equitiesService.updateEquity(this.currentEquity.id, { published: status })
-      .then(() => {
-        this.currentEquity.published = status;
-        this.message = 'The status was updated successfully!';
-      })
-      .catch(err => console.log(err));
-    }
+    // if (this.currentEquity?.id) {
+    //   this.equitiesService.updateEquity(this.currentEquity.id, { published: status })
+    //   .then(() => {
+    //     this.currentEquity.published = status;
+    //     this.message = 'The status was updated successfully!';
+    //   })
+    //   .catch(err => console.log(err));
+    // }
   }
 
-  updateEquity(): void {
+  updateEquity(equity: Equity): void {
     const data = {
-      symbol: this.currentEquity.symbol,
+      symbol: equity.symbol,
     };
 
-    if (this.currentEquity.id) {
-      this.equitiesService.updateEquity(this.currentEquity.id, data)
+    if (equity.id) {
+      this.equitiesService.updateEquity(equity.id, data)
         .then(() => this.message = 'The equity was updated successfully!')
         .catch(err => console.log(err));
     }
   }
 
-  deleteEquity(): void {
-    if (this.currentEquity.id) {
-      this.equitiesService.deleteEquity(this.currentEquity.id)
+  deleteEquity(id: string): void {
+    if (id) {
+      this.equitiesService.deleteEquity(id)
         .then(() => {
           this.refreshList();
           this.message = 'The equity was deleted successfully!';

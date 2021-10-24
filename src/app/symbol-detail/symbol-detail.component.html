@@ -1,0 +1,50 @@
+
+<h4>Equity Details</h4>
+
+<form class="form-group" [formGroup]="symbolForm" *ngIf="currentEquity$ | async as currentEquity">
+    
+    <label for="symbol">Symbol</label>
+    <input type="text"
+           class="form-control"
+           id="symbol"
+           required
+           [formControl]="symbolControl"
+           name="symbol"/>
+    
+    <div class="form-group">
+        <label><strong>Status:</strong></label>
+        {{ currentEquity.published ? "Published" : "Pending" }}
+    </div>
+
+    <div class="button-container">
+
+        <button class="badge badge-primary mr-2"
+            *ngIf="currentEquity.published">
+            <!-- (click)="updatePublishedStatus(false)"> -->
+            UnPublish
+        </button>
+        <button *ngIf="!currentEquity.published"
+            class="badge badge-primary mr-2">
+            <!-- (click)="updatePublishedStatus(true)"> -->
+            Publish
+        </button>
+    
+        <button class="badge badge-danger mr-2" (click)="deleteEquity()">
+            Delete
+        </button>
+    
+        <button type="submit" class="badge badge-success" (click)="updateEquity()">
+            Update
+        </button>
+    
+    </div>
+
+</form>
+
+<p>{{ message }}</p>
+
+
+<div *ngIf="(currentEquity$ | async) === false">
+    <br />
+    <p>Cannot access this Equity...</p>
+</div>

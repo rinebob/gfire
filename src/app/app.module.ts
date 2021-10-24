@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -12,17 +12,24 @@ import { provideFirestore, getFirestore, connectFirestoreEmulator, enableIndexed
 
 import { environment } from '../environments/environment';
 import { ItemsComponent } from './items/items.component';
+import { SymbolFormComponent } from './symbol-form/symbol-form.component';
+import { SymbolListComponent } from './symbol-list/symbol-list.component';
+import { SymbolDetailComponent } from './symbol-detail/symbol-detail.component';
 // import { FirebaseService } from './firebase.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ItemsComponent
+    ItemsComponent,
+    SymbolFormComponent,
+    SymbolListComponent,
+    SymbolDetailComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence({ synchronizeTabs: true }),
     // provideFirebaseApp(() => initializeApp(environment.firebase)),
